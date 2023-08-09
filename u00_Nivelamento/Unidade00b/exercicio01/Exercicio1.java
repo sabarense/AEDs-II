@@ -1,4 +1,4 @@
-package Nivelamento;
+package u00_Nivelamento.Unidade00b.exercicio01;
 
 import java.util.Scanner;
 
