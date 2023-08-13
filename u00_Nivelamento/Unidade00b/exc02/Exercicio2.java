@@ -1,4 +1,4 @@
-package u00_Nivelamento.Unidade00b.exercicio02;
+package u00_Nivelamento.Unidade00b.exc02;
 
 import java.util.Scanner;
 
@@ -13,11 +13,11 @@ public class Exercicio2 {
         for(int i = 0; i < array.length; i++){
             array[i] = scanner.nextInt();
         }
-        imprimeMaioreMenor(array);
+        maiorMenor(array);
         scanner.close();
     }
 
-    static void imprimeMaioreMenor(int[]array){
+    static void maiorMenor(int[]array){
 
         int maior = array[0];
         int menor = array[0];
