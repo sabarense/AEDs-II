@@ -1,25 +1,24 @@
 package TP01.Q01;
 
-import java.util.Scanner;
+import TP01.MyIO;
 
 public class palindromo {
 
     public static void main(String[] args) {
 
-        Scanner scanner = new Scanner(System.in);
-        String palavra = scanner.nextLine();
-        while(!palavra.equals("FIM")){
+        String palavra = MyIO.readLine();
+        while(!palavra.equalsIgnoreCase("FIM")){
             if(isPalindromo(palavra)){
                 System.out.println("SIM");
             }else{
                 System.out.println("NAO");
             }
-            palavra = scanner.nextLine();
+            palavra = MyIO.readLine();
         }
-        scanner.close();
+
     }
 
-    static boolean isPalindromo(String palavra){
+    public static boolean isPalindromo(String palavra){
 
         int i;
         int j;
