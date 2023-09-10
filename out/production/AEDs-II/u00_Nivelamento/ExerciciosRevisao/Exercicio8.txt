@@ -1,2 +1,0 @@
-O codigo apresentado tem os nomes de função bem descritivos, que demonstram exatamente o
-que a funçao faz, porem, sem acesso à classe Unidade, isso se torna confuso.

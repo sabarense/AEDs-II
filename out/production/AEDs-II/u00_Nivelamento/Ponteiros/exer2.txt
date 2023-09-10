@@ -1,3 +1,0 @@
-O programa imprime a posição de memoria de vet,
-e depois aponta para uma nova regiao da memoria,
-e imprime novamente.
