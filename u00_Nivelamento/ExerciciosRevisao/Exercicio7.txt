@@ -27,6 +27,6 @@ class isConsoanteCorrecao{
     }
 
     public static void main(String[] args) {
-        TP01.MyIO.println("-->"+ isConsoante("Arroz",2));
+        TP01.Lab.MyIO.println("-->"+ isConsoante("Arroz",2));
     }
 }
