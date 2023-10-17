@@ -202,7 +202,7 @@ int main()
     char name[100];
     scanf(" %[^\n]s", name);
 
-    FILE *tempArq = fopen("808721_shellsort.txt", "w");
+    FILE *tempArq = fopen("791624_shellsort.txt", "w");
     int cmp;
     clock_t inicio, fim;
     double total;
@@ -210,7 +210,7 @@ int main()
     cmp = ordenaShellsort(clonedPlayers, j);
 
     total = ((fim - inicio) / (double)CLOCKS_PER_SEC);
-    fprintf(tempArq, "808721\t%fs.\t%d", total, cmp);
+    fprintf(tempArq, "791624\t%fs.\t%d", total, cmp);
     fclose(tempArq);
 
     for (int i = 0; i < j; i++)
