@@ -1,10 +1,9 @@
-package TP02.TP02Q03;
+//package TP02.TP02Q18;
 
 import java.io.*;
-import java.time.Duration;
-import java.time.LocalDateTime;
-import java.util.Scanner;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 class Jogador {
     private int id;
@@ -111,14 +110,15 @@ class Jogador {
         this.estadoNascimento = estadoNascimento;
     }
 
-    public void ler(String nomeDoArquivo, ArrayList<Jogador> array) throws IOException {
+    public void ler(String nomeDoArquivo, ArrayList<Jogador> array) throws Exception {
         try (BufferedReader buffer = new BufferedReader(new FileReader(nomeDoArquivo))) {
             buffer.readLine();
             String linha;
             while ((linha = buffer.readLine()) != null) {
                 String[] jogadorInfo = linha.split(",", -1);
+
                 Jogador jogador = new Jogador();
-                jogador.setId(obterValorInteiro(jogadorInfo, 0, -1));
+                jogador.setId(Integer.parseInt(jogadorInfo[0]));
                 jogador.setNome(obterValor(jogadorInfo, 1, "nao informado"));
                 jogador.setAltura(obterValorInteiro(jogadorInfo, 2, 0));
                 jogador.setPeso(obterValorInteiro(jogadorInfo, 3, 0));
@@ -133,26 +133,87 @@ class Jogador {
     }
 
     private String obterValor(String[] array, int indice, String valorPadrao) {
-        return (indice < array.length && !array[indice].isEmpty()) ? array[indice] : valorPadrao;
+        if (indice < array.length && !array[indice].isEmpty()) {
+            return array[indice];
+        }
+        return valorPadrao;
     }
 
     private int obterValorInteiro(String[] array, int indice, int valorPadrao) {
-        return (indice < array.length && !array[indice].isEmpty()) ? Integer.parseInt(array[indice]) : valorPadrao;
+        if (indice < array.length && !array[indice].isEmpty()) {
+            return Integer.parseInt(array[indice]);
+        }
+        return valorPadrao;
     }
 
+    public static void ordenarQuicksortParcial(ArrayList<Jogador> jogadores, int k) {
+        if (jogadores.size() <= k) {
+            // Não é necessário ordenar, pois já temos k elementos ou menos
+            return;
+        }
+
+        // Seleciona os primeiros k jogadores como os menores até o momento
+        ArrayList<Jogador> menores = new ArrayList<>(jogadores.subList(0, k));
+
+        // Aplica o Quicksort no vetor
+        quicksort(jogadores, 0, jogadores.size() - 1, menores, k);
+    }
+
+    private static void quicksort(ArrayList<Jogador> jogadores, int inicio, int fim, ArrayList<Jogador> menores, int k) {
+        if (inicio < fim) {
+            int indicePivo = particionar(jogadores, inicio, fim, menores, k);
+
+            // Verifica se o pivo está entre os k menores
+            if (indicePivo < k) {
+                // A parte à direita do pivo não precisa ser ordenada
+                quicksort(jogadores, indicePivo + 1, fim, menores, k);
+            }
+
+            // A parte à esquerda do pivo sempre precisa ser ordenada
+            quicksort(jogadores, inicio, indicePivo - 1, menores, k);
+        }
+    }
+
+    private static int particionar(ArrayList<Jogador> jogadores, int inicio, int fim, ArrayList<Jogador> menores, int k) {
+        Jogador pivo = jogadores.get(fim);
+        int i = inicio - 1;
+
+        for (int j = inicio; j < fim; j++) {
+            if (jogadores.get(j).getEstadoNascimento().compareTo(pivo.getEstadoNascimento()) <= 0) {
+                i++;
+                Collections.swap(jogadores, i, j);
+                if (i < k) {
+                    menores.set(i, jogadores.get(i));
+                }
+            }
+        }
+
+        Collections.swap(jogadores, i + 1, fim);
+        if (i + 1 < k) {
+            menores.set(i + 1, jogadores.get(i + 1));
+        }
+
+        return i + 1;
+    }
+
+    private static void encontrarEInserirJogador(ArrayList<Jogador> players, ArrayList<Jogador> playersInseridos, int id) throws CloneNotSupportedException {
+        for (Jogador player : players) {
+            if (player.getId() == id) {
+                playersInseridos.add(player.clone());
+                break;
+            }
+        }
+    }
     public void imprimir(){
         System.out.println("["+ id +" ## "+ nome + " ## " + altura + " ## " + peso + " ## " +
                 anoNascimento + " ## " + universidade + " ## " + cidadeNascimento + " ## " +
                 estadoNascimento +"]");
     }
-
     public static void main(String[] args) {
-        int contadorComparacoes = 0;
-        LocalDateTime dataHoraInicio = LocalDateTime.now();
-
         try {
             Jogador jogador = new Jogador();
             ArrayList<Jogador> players = new ArrayList<>();
+            ArrayList<Jogador> playersInseridos = new ArrayList<>();
             jogador.ler("/tmp/players.csv", players);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -163,33 +224,17 @@ class Jogador {
                 if (entrada.equals("FIM")) {
                     break;
                 }
-                Jogador jogadorEncontrado = null;
-                for (Jogador player : players) {
-                    if (player.getId() == Integer.parseInt(entrada)) {
-                        jogadorEncontrado = player.clone();
-                        break;
-                    }
-                }
-                if (jogadorEncontrado != null) {
-                    jogadorEncontrado.imprimir();
-                }
+                encontrarEInserirJogador(players, playersInseridos, Integer.parseInt(entrada));
             }
-        } catch (IOException | CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
 
-        LocalDateTime dataHoraFinal = LocalDateTime.now();
-        Duration duracao = Duration.between(dataHoraInicio, dataHoraFinal);
-        long duracaoMillis = duracao.toMillis();
+            ordenarQuicksortParcial(playersInseridos, 10);
 
-        try (BufferedWriter buffer = new BufferedWriter(new FileWriter("791624_sequencial.txt"))) {
-            buffer.write("Matricula: 791624\t");
-            buffer.write("Tempo de execucao: " + duracaoMillis + "ms\t");
-            buffer.write("Numero de comparacoes: " + contadorComparacoes + "\t");
-        } catch (IOException e) {
+            for (Jogador jogadorInserido : playersInseridos) {
+                jogadorInserido.imprimir();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 }
-

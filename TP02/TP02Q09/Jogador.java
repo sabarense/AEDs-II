@@ -1,10 +1,9 @@
-package TP02.TP02Q09;
+//package TP02.TP02Q09;
 
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 class Jogador {
     private int id;
@@ -39,6 +38,7 @@ class Jogador {
         novo.setId(this.id);
         novo.setAltura(this.altura);
         novo.setPeso(this.peso);
+        novo.setNome(this.nome);
         novo.setUniversidade(this.universidade);
         novo.setAnoNascimento(this.anoNascimento);
         novo.setCidadeNascimento(this.cidadeNascimento);
@@ -112,6 +112,7 @@ class Jogador {
 
     public void ler(String nomeDoArquivo, ArrayList<Jogador> array) throws Exception {
         try (BufferedReader buffer = new BufferedReader(new FileReader(nomeDoArquivo))) {
+            buffer.readLine();
             String linha;
             while ((linha = buffer.readLine()) != null) {
                 String[] jogadorInfo = linha.split(",", -1);
@@ -146,7 +147,7 @@ class Jogador {
     }
 
     public static void ordenarHeapSort(ArrayList<Jogador> jogadores) throws IOException {
-        FileWriter escritor = new FileWriter("808721_heap.txt");
+        FileWriter escritor = new FileWriter("791624_heap.txt");
         BufferedWriter buffer = new BufferedWriter(escritor);
         int contadorComparacoes = 0;
 
@@ -218,11 +219,11 @@ class Jogador {
             ArrayList<Jogador> playersInseridos = new ArrayList<>();
             jogador.ler("/tmp/players.csv", players);
 
-            Scanner sc = new Scanner(System.in);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String entrada;
 
             while (true) {
-                entrada = sc.nextLine();
+                entrada = reader.readLine();
                 if (entrada.equals("FIM")) {
                     break;
                 }

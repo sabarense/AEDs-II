@@ -139,44 +139,46 @@ void ler(Jogador *jogador, char str[300])
     }
 }
 
-void insercaoPorCor(Jogador *array, int n, int cor, int h){
-    for (int i = (h + cor); i < n; i+=h) {
-        Jogador tmp = array[i];
-        int j = i - h;
-        while ((j >= 0) && ((int)array[j].peso >= (int)tmp.peso)) {
-            if((int)array[j].peso == (int)tmp.peso){
-                if(strcmp(array[j].nome, tmp.nome) > 0){
-                    array[j + h] = array[j];
-                    j-=h;
-                }else{
-                    break;
+void swap(Jogador array[], int i, int j)
+{
+    Jogador temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+}
+void garanteOrdem(Jogador *jogador, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (jogador[i].anoNascimento == jogador[j].anoNascimento)
+            {
+                if (strcmp(jogador[i].nome, jogador[j].nome) > 0)
+                {
+                    swap(jogador, i, j);
                 }
-            }else{
-                array[j + h] = array[j];
-                j-=h;
             }
         }
-        array[j + h] = tmp;
     }
 }
 
-int ordenaShellsort(Jogador *array, int tam)
-{
-    int h = 1;
+void ordenacaoParcialInsercao(Jogador *jogadores, int n) {
+    int i, j;
+    Jogador chave;
 
-    do { h = (h * 3) + 1; } while (h < tam);
+    for (i = 1; i < n; i++) {
+        chave = jogadores[i];
+        j = i - 1;
 
-    do {
-        h /= 3;
-        for(int cor = 0; cor < h; cor++){
-            insercaoPorCor(array, tam, cor, h);
+        while (j >= 0 && jogadores[j].anoNascimento > chave.anoNascimento) {
+            jogadores[j + 1] = jogadores[j];
+            j = j - 1;
         }
-    } while (h != 1);
+        jogadores[j + 1] = chave;
+    }
 }
 
-int main()
-{
-
+int main() {
     Jogador players[3923];
     Jogador clonedPlayers[3923];
     int contador = 0;
@@ -184,8 +186,7 @@ int main()
 
     FILE *arq = fopen("/tmp/players.csv", "r");
 
-    if (arq == NULL)
-    {
+    if (arq == NULL) {
         printf("File not found\n");
         return 0;
     }
@@ -193,16 +194,14 @@ int main()
     char str[300];
     fgets(str, sizeof(str), arq);
     int i = 0;
-    while (fgets(str, sizeof(str), arq))
-    {
+    while (fgets(str, sizeof(str), arq)) {
         ler(&players[i], str);
         i++;
     }
 
     scanf("%s", n);
     int j = 0;
-    while (strcmp(n, "FIM") != 0)
-    {
+    while (strcmp(n, "FIM") != 0) {
         int indice = atoi(n);
         clone(&players[indice], &clonedPlayers[contador++]);
         j++;
@@ -212,19 +211,17 @@ int main()
     char name[100];
     scanf(" %[^\n]s", name);
 
-    FILE *tempArq = fopen("791624_shellsort.txt", "w");
-    int cmp;
     clock_t inicio, fim;
     double total;
 
-    cmp = ordenaShellsort(clonedPlayers, j);
+    inicio = clock();
+    ordenacaoParcialInsercao(clonedPlayers, j);
+    garanteOrdem(clonedPlayers, j);
+    fim = clock();
 
-    total = ((fim - inicio) / (double)CLOCKS_PER_SEC);
-    fprintf(tempArq, "791624\t%fs.\t%d", total, cmp);
-    fclose(tempArq);
+    total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
 
-    for (int i = 0; i < j; i++)
-    {
+    for (int i = 0; i < j && i < 10; i++) {
         imprimir(&clonedPlayers[i]);
     }
 

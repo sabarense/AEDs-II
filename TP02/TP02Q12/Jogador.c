@@ -139,39 +139,39 @@ void ler(Jogador *jogador, char str[300])
     }
 }
 
-void insercaoPorCor(Jogador *array, int n, int cor, int h){
-    for (int i = (h + cor); i < n; i+=h) {
-        Jogador tmp = array[i];
-        int j = i - h;
-        while ((j >= 0) && ((int)array[j].peso >= (int)tmp.peso)) {
-            if((int)array[j].peso == (int)tmp.peso){
-                if(strcmp(array[j].nome, tmp.nome) > 0){
-                    array[j + h] = array[j];
-                    j-=h;
-                }else{
-                    break;
-                }
-            }else{
-                array[j + h] = array[j];
-                j-=h;
+void swap(Jogador array[], int i, int j)
+{
+    Jogador temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+}
+
+int ordenaBolha(Jogador *jogador, int n){
+    for(int i = (n-1); i > 0; i--){
+        for(int j = 0; j < i; j++){
+            if(jogador[j].anoNascimento > jogador[j+1].anoNascimento){
+                swap(jogador, j, j+1);
             }
         }
-        array[j + h] = tmp;
     }
 }
 
-int ordenaShellsort(Jogador *array, int tam)
+
+void garanteOrdem(Jogador *jogador, int n)
 {
-    int h = 1;
-
-    do { h = (h * 3) + 1; } while (h < tam);
-
-    do {
-        h /= 3;
-        for(int cor = 0; cor < h; cor++){
-            insercaoPorCor(array, tam, cor, h);
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (jogador[i].anoNascimento == jogador[j].anoNascimento)
+            {
+                if (strcmp(jogador[i].nome, jogador[j].nome) > 0)
+                {
+                    swap(jogador, i, j);
+                }
+            }
         }
-    } while (h != 1);
+    }
 }
 
 int main()
@@ -212,14 +212,17 @@ int main()
     char name[100];
     scanf(" %[^\n]s", name);
 
-    FILE *tempArq = fopen("791624_shellsort.txt", "w");
+    FILE *tempArq = fopen("791624_bolha.txt", "w");
     int cmp;
     clock_t inicio, fim;
     double total;
 
-    cmp = ordenaShellsort(clonedPlayers, j);
+    inicio = clock();
+    cmp = ordenaBolha(clonedPlayers, j);
+    garanteOrdem(clonedPlayers, j);
+    fim = clock();
 
-    total = ((fim - inicio) / (double)CLOCKS_PER_SEC);
+    total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
     fprintf(tempArq, "791624\t%fs.\t%d", total, cmp);
     fclose(tempArq);
 

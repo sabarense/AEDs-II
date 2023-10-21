@@ -5,6 +5,7 @@
 #include <time.h>
 
 #define MAX_LENGTH 100
+#define K 10
 
 typedef struct
 {
@@ -139,44 +140,78 @@ void ler(Jogador *jogador, char str[300])
     }
 }
 
-void insercaoPorCor(Jogador *array, int n, int cor, int h){
-    for (int i = (h + cor); i < n; i+=h) {
-        Jogador tmp = array[i];
-        int j = i - h;
-        while ((j >= 0) && ((int)array[j].peso >= (int)tmp.peso)) {
-            if((int)array[j].peso == (int)tmp.peso){
-                if(strcmp(array[j].nome, tmp.nome) > 0){
-                    array[j + h] = array[j];
-                    j-=h;
-                }else{
-                    break;
+void swap(Jogador array[], int i, int j)
+{
+    Jogador temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+}
+
+void garanteOrdem(Jogador *jogador, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (jogador[i].anoNascimento == jogador[j].anoNascimento)
+            {
+                if (strcmp(jogador[i].nome, jogador[j].nome) > 0)
+                {
+                    swap(jogador, i, j);
                 }
-            }else{
-                array[j + h] = array[j];
-                j-=h;
             }
         }
-        array[j + h] = tmp;
     }
 }
 
-int ordenaShellsort(Jogador *array, int tam)
+void heapify(Jogador array[], int n, int i)
 {
-    int h = 1;
+    int maior = i;
+    int esq = 2 * i + 1;
+    int dir = 2 * i + 2;
 
-    do { h = (h * 3) + 1; } while (h < tam);
+    if (esq < n && array[esq].altura > array[maior].altura)
+        maior = esq;
 
-    do {
-        h /= 3;
-        for(int cor = 0; cor < h; cor++){
-            insercaoPorCor(array, tam, cor, h);
-        }
-    } while (h != 1);
+    if (dir < n && array[dir].altura > array[maior].altura)
+        maior = dir;
+
+    if (maior != i)
+    {
+        swap(array, i, maior);
+        heapify(array, n, maior);
+    }
 }
+
+void heapsort(Jogador array[], int n)
+{
+    for (int i = n / 2 - 1; i >= 0; i--)
+        heapify(array, n, i);
+
+    for (int i = n - 1; i >= n - K; i--)
+    {
+        swap(array, 0, i);
+        heapify(array, i, 0);
+    }
+
+    for (int i = n - K; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (array[i].anoNascimento == array[j].anoNascimento)
+            {
+                if (strcmp(array[i].nome, array[j].nome) > 0)
+                {
+                    swap(array, i, j);
+                }
+            }
+        }
+    }
+}
+
 
 int main()
 {
-
     Jogador players[3923];
     Jogador clonedPlayers[3923];
     int contador = 0;
@@ -212,22 +247,20 @@ int main()
     char name[100];
     scanf(" %[^\n]s", name);
 
-    FILE *tempArq = fopen("791624_shellsort.txt", "w");
-    int cmp;
     clock_t inicio, fim;
     double total;
 
-    cmp = ordenaShellsort(clonedPlayers, j);
+    inicio = clock();
+    heapsort(clonedPlayers, j);
+    garanteOrdem(clonedPlayers, j);
+    fim = clock();
 
-    total = ((fim - inicio) / (double)CLOCKS_PER_SEC);
-    fprintf(tempArq, "791624\t%fs.\t%d", total, cmp);
-    fclose(tempArq);
+    total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
 
-    for (int i = 0; i < j; i++)
+    for (int i = j - K; i < j; i++)
     {
         imprimir(&clonedPlayers[i]);
     }
-
     fclose(arq);
     return 0;
 }

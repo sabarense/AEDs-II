@@ -1,10 +1,9 @@
-package TP02.TP02Q05;
+//package TP02.TP02Q05;
 
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 class Jogador {
     private int id;
@@ -39,6 +38,7 @@ class Jogador {
         novo.setId(this.id);
         novo.setAltura(this.altura);
         novo.setPeso(this.peso);
+        novo.setNome(this.nome);
         novo.setUniversidade(this.universidade);
         novo.setAnoNascimento(this.anoNascimento);
         novo.setCidadeNascimento(this.cidadeNascimento);
@@ -201,13 +201,13 @@ class Jogador {
             Jogador jogador = new Jogador();
             ArrayList<Jogador> players = new ArrayList<>();
             ArrayList<Jogador> playersInseridos = new ArrayList<>();
-            jogador.ler("C:\\Faculdade\\AEDs-II\\TP02\\players.csv", players);
+            jogador.ler("/tmp/players.csv", players);
 
-            Scanner sc = new Scanner(System.in);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String entrada;
 
             while (true) {
-                entrada = sc.nextLine();
+                entrada = reader.readLine();
                 if (entrada.equals("FIM")) {
                     break;
                 }

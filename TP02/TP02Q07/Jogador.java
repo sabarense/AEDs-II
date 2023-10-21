@@ -1,9 +1,10 @@
-package TP02.TP02Q07;
+//package TP02.TP02Q07;
 
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Scanner;
 
 class Jogador {
@@ -39,6 +40,7 @@ class Jogador {
         novo.setId(this.id);
         novo.setAltura(this.altura);
         novo.setPeso(this.peso);
+        novo.setNome(this.nome);
         novo.setUniversidade(this.universidade);
         novo.setAnoNascimento(this.anoNascimento);
         novo.setCidadeNascimento(this.cidadeNascimento);
@@ -112,6 +114,7 @@ class Jogador {
 
     public void ler(String nomeDoArquivo, ArrayList<Jogador> array) throws Exception {
         try (BufferedReader buffer = new BufferedReader(new FileReader(nomeDoArquivo))) {
+            buffer.readLine();
             String linha;
             while ((linha = buffer.readLine()) != null) {
                 String[] jogadorInfo = linha.split(",", -1);
@@ -147,44 +150,44 @@ class Jogador {
 
     public static void ordenarInsercao(ArrayList<Jogador> jogadores) throws IOException {
 
-        FileWriter escritor = new FileWriter("791624_insercao.txt");
-        BufferedWriter buffer = new BufferedWriter(escritor);
+        int contadorComparacoes = 0;
+        int contadorMovimentacoes = 0;
 
         LocalDateTime dataHoraInicio = LocalDateTime.now();
-        int contadorComparacoes = 0;
 
-        try {
-            for (int i = 1; i < jogadores.size(); i++) {
-                Jogador tmp = jogadores.get(i);
-                int j = i - 1;
+        for (int i = 1; i < jogadores.size(); i++) {
+            Jogador tmp = jogadores.get(i);
+            int j = i - 1;
 
-                while ((j >= 0) && (jogadores.get(j).getAnoNascimento() >= tmp.getAnoNascimento())) {
-                    if (jogadores.get(j).getAnoNascimento() == tmp.getAnoNascimento()) {
-                        contadorComparacoes++;
-                        if (jogadores.get(j).getNome().compareTo(tmp.getNome()) > 0) {
-                            jogadores.set(j + 1, jogadores.get(j));
-                            j--;
-                        } else {
-                            break;
-                        }
-                    } else {
+            while ((j >= 0) && (jogadores.get(j).getAnoNascimento() >= tmp.getAnoNascimento())) {
+                if (jogadores.get(j).getAnoNascimento() == tmp.getAnoNascimento()) {
+                    contadorComparacoes++;
+                    if (jogadores.get(j).getNome().compareTo(tmp.getNome()) > 0) {
                         jogadores.set(j + 1, jogadores.get(j));
                         j--;
+                        contadorMovimentacoes++;
+                    } else {
+                        break;
                     }
+                } else {
+                    jogadores.set(j + 1, jogadores.get(j));
+                    j--;
+                    contadorMovimentacoes++;
                 }
-                jogadores.set(j + 1, tmp);
             }
-        } catch (Exception e) {
-
+            jogadores.set(j + 1, tmp);
         }
 
-        buffer.write("Matricula: 791624\t");
         LocalDateTime dataHoraFinal = LocalDateTime.now();
         Duration duracao = Duration.between(dataHoraInicio, dataHoraFinal);
         long duracaoMillis = duracao.toMillis();
-        buffer.write("Tempo de execucao: " + duracaoMillis + "s\t");
-        buffer.write("Numero de comparacoes: " + contadorComparacoes + "\t");
-        buffer.close();
+
+        try (BufferedWriter buffer = new BufferedWriter(new FileWriter("matricula_insercao.txt"))) {
+            buffer.write("Matricula: 791624\t");
+            buffer.write("Comparacoes: " + contadorComparacoes + "\t");
+            buffer.write("Movimentacoes: " + contadorMovimentacoes + "\t");
+            buffer.write("Tempo de execucao: " + duracaoMillis + "ms\t");
+        }
     }
 
     public void imprimir(){
@@ -199,16 +202,17 @@ class Jogador {
             ArrayList<Jogador> playersInseridos = new ArrayList<>();
             jogador.ler("/tmp/players.csv", players);
 
-            Scanner sc = new Scanner(System.in);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String entrada;
 
             while (true) {
-                entrada = sc.nextLine();
+                entrada = reader.readLine();
                 if (entrada.equals("FIM")) {
                     break;
                 }
 
-                for (Jogador player : players) {
+                for (int i = 0; i < players.size(); i++) {
+                    Jogador player = players.get(i);
                     if (player.getId() == Integer.parseInt(entrada)) {
                         playersInseridos.add(player.clone());
                         break;
@@ -218,8 +222,19 @@ class Jogador {
 
             ordenarInsercao(playersInseridos);
 
-            for (Jogador jogadorInserido : playersInseridos) {
-                jogadorInserido.imprimir();
+            ArrayList<Jogador> jogadoresOrdenados = new ArrayList<>();
+            for (int i = 0; i < playersInseridos.size(); i++) {
+                Jogador jogadorInserido = playersInseridos.get(i);
+                jogadoresOrdenados.add(jogadorInserido.clone());
+            }
+
+            // Ordenar por ano de nascimento e nome em caso de empate
+            jogadoresOrdenados.sort(Comparator.comparing(Jogador::getAnoNascimento)
+                    .thenComparing(Jogador::getNome));
+
+            for (int i = 0; i < jogadoresOrdenados.size(); i++) {
+                Jogador jogadorOrdenado = jogadoresOrdenados.get(i);
+                jogadorOrdenado.imprimir();
             }
 
         } catch (Exception e) {

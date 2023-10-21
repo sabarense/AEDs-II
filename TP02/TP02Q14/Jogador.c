@@ -139,39 +139,58 @@ void ler(Jogador *jogador, char str[300])
     }
 }
 
-void insercaoPorCor(Jogador *array, int n, int cor, int h){
-    for (int i = (h + cor); i < n; i+=h) {
-        Jogador tmp = array[i];
-        int j = i - h;
-        while ((j >= 0) && ((int)array[j].peso >= (int)tmp.peso)) {
-            if((int)array[j].peso == (int)tmp.peso){
-                if(strcmp(array[j].nome, tmp.nome) > 0){
-                    array[j + h] = array[j];
-                    j-=h;
-                }else{
-                    break;
+void swap(Jogador array[], int i, int j)
+{
+    Jogador temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+}
+
+void garanteOrdem(Jogador *jogador, int n)
+{
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i + 1; j < n; j++)
+        {
+            if (jogador[i].anoNascimento == jogador[j].anoNascimento)
+            {
+                if (strcmp(jogador[i].nome, jogador[j].nome) > 0)
+                {
+                    swap(jogador, i, j);
                 }
-            }else{
-                array[j + h] = array[j];
-                j-=h;
             }
         }
-        array[j + h] = tmp;
     }
 }
 
-int ordenaShellsort(Jogador *array, int tam)
-{
-    int h = 1;
+void countingSort(Jogador array[], int n, int exp) {
+    Jogador output[n];
+    int count[10] = {0};
 
-    do { h = (h * 3) + 1; } while (h < tam);
+    for (int i = 0; i < n; i++)
+        count[(array[i].id / exp) % 10]++;
 
-    do {
-        h /= 3;
-        for(int cor = 0; cor < h; cor++){
-            insercaoPorCor(array, tam, cor, h);
-        }
-    } while (h != 1);
+    for (int i = 1; i < 10; i++)
+        count[i] += count[i - 1];
+
+    for (int i = n - 1; i >= 0; i--) {
+        output[count[(array[i].id / exp) % 10] - 1] = array[i];
+        count[(array[i].id / exp) % 10]--;
+    }
+
+    for (int i = 0; i < n; i++)
+        array[i] = output[i];
+}
+
+void radixsort(Jogador array[], int n) {
+    int maxID = array[0].id;
+    for (int i = 1; i < n; i++) {
+        if (array[i].id > maxID)
+            maxID = array[i].id;
+    }
+
+    for (int exp = 1; maxID / exp > 0; exp *= 10)
+        countingSort(array, n, exp);
 }
 
 int main()
@@ -212,16 +231,16 @@ int main()
     char name[100];
     scanf(" %[^\n]s", name);
 
-    FILE *tempArq = fopen("791624_shellsort.txt", "w");
     int cmp;
     clock_t inicio, fim;
     double total;
 
-    cmp = ordenaShellsort(clonedPlayers, j);
+    inicio = clock();
+    radixsort(clonedPlayers, j);
+    garanteOrdem(clonedPlayers, j);
+    fim = clock();
 
-    total = ((fim - inicio) / (double)CLOCKS_PER_SEC);
-    fprintf(tempArq, "791624\t%fs.\t%d", total, cmp);
-    fclose(tempArq);
+    total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
 
     for (int i = 0; i < j; i++)
     {

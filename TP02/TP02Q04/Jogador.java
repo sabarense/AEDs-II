@@ -1,4 +1,4 @@
-package TP02.TP02Q03;
+package TP02.TP02Q04;
 
 import java.io.*;
 import java.time.Duration;
@@ -41,6 +41,7 @@ public class Jogador {
         novo.setId(this.id);
         novo.setAltura(this.altura);
         novo.setPeso(this.peso);
+        novo.setNome(this.nome);
         novo.setUniversidade(this.universidade);
         novo.setAnoNascimento(this.anoNascimento);
         novo.setCidadeNascimento(this.cidadeNascimento);
@@ -184,11 +185,11 @@ public class Jogador {
             Map<Integer, Jogador> jogadorMap = new HashMap<>();
             jogador.ler("/tmp/players.csv", (ArrayList<Jogador>) jogadorMap);
 
-            Scanner sc = new Scanner(System.in);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String entrada;
 
             while (true) {
-                entrada = sc.nextLine();
+                entrada = reader.readLine();
                 if (entrada.equals("FIM")) {
                     break;
                 }

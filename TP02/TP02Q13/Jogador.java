@@ -1,9 +1,8 @@
-package TP02.TP02Q03;
+//package TP02.TP02Q09;
 
 import java.io.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Scanner;
 import java.util.ArrayList;
 
 class Jogador {
@@ -111,14 +110,15 @@ class Jogador {
         this.estadoNascimento = estadoNascimento;
     }
 
-    public void ler(String nomeDoArquivo, ArrayList<Jogador> array) throws IOException {
+    public void ler(String nomeDoArquivo, ArrayList<Jogador> array) throws Exception {
         try (BufferedReader buffer = new BufferedReader(new FileReader(nomeDoArquivo))) {
             buffer.readLine();
             String linha;
             while ((linha = buffer.readLine()) != null) {
                 String[] jogadorInfo = linha.split(",", -1);
+
                 Jogador jogador = new Jogador();
-                jogador.setId(obterValorInteiro(jogadorInfo, 0, -1));
+                jogador.setId(Integer.parseInt(jogadorInfo[0]));
                 jogador.setNome(obterValor(jogadorInfo, 1, "nao informado"));
                 jogador.setAltura(obterValorInteiro(jogadorInfo, 2, 0));
                 jogador.setPeso(obterValorInteiro(jogadorInfo, 3, 0));
@@ -133,11 +133,79 @@ class Jogador {
     }
 
     private String obterValor(String[] array, int indice, String valorPadrao) {
-        return (indice < array.length && !array[indice].isEmpty()) ? array[indice] : valorPadrao;
+        if (indice < array.length && !array[indice].isEmpty()) {
+            return array[indice];
+        }
+        return valorPadrao;
     }
 
     private int obterValorInteiro(String[] array, int indice, int valorPadrao) {
-        return (indice < array.length && !array[indice].isEmpty()) ? Integer.parseInt(array[indice]) : valorPadrao;
+        if (indice < array.length && !array[indice].isEmpty()) {
+            return Integer.parseInt(array[indice]);
+        }
+        return valorPadrao;
+    }
+
+    public static void mergeSort(ArrayList<Jogador> jogadores, int inicio, int fim) {
+        if (inicio < fim) {
+            int meio = (inicio + fim) / 2;
+
+            mergeSort(jogadores, inicio, meio);
+            mergeSort(jogadores, meio + 1, fim);
+
+            merge(jogadores, inicio, meio, fim);
+        }
+    }
+
+    public static void merge(ArrayList<Jogador> jogadores, int inicio, int meio, int fim) {
+        int n1 = meio - inicio + 1;
+        int n2 = fim - meio;
+
+        ArrayList<Jogador> left = new ArrayList<>();
+        ArrayList<Jogador> right = new ArrayList<>();
+
+        for (int i = 0; i < n1; i++) {
+            left.add(jogadores.get(inicio + i));
+        }
+
+        for (int j = 0; j < n2; j++) {
+            right.add(jogadores.get(meio + 1 + j));
+        }
+
+        int i = 0, j = 0, k = inicio;
+
+        while (i < n1 && j < n2) {
+            if (left.get(i).getUniversidade().compareTo(right.get(j).getUniversidade()) <= 0) {
+                jogadores.set(k, left.get(i));
+                i++;
+            } else {
+                jogadores.set(k, right.get(j));
+                j++;
+            }
+            k++;
+        }
+
+        while (i < n1) {
+            jogadores.set(k, left.get(i));
+            i++;
+            k++;
+        }
+
+        while (j < n2) {
+            jogadores.set(k, right.get(j));
+            j++;
+            k++;
+        }
+    }
+
+
+    private static void encontrarEInserirJogador(ArrayList<Jogador> players, ArrayList<Jogador> playersInseridos, int id) throws CloneNotSupportedException {
+        for (Jogador player : players) {
+            if (player.getId() == id) {
+                playersInseridos.add(player.clone());
+                break;
+            }
+        }
     }
 
     public void imprimir(){
@@ -147,12 +215,10 @@ class Jogador {
     }
 
     public static void main(String[] args) {
-        int contadorComparacoes = 0;
-        LocalDateTime dataHoraInicio = LocalDateTime.now();
-
         try {
             Jogador jogador = new Jogador();
             ArrayList<Jogador> players = new ArrayList<>();
+            ArrayList<Jogador> playersInseridos = new ArrayList<>();
             jogador.ler("/tmp/players.csv", players);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -163,33 +229,17 @@ class Jogador {
                 if (entrada.equals("FIM")) {
                     break;
                 }
-                Jogador jogadorEncontrado = null;
-                for (Jogador player : players) {
-                    if (player.getId() == Integer.parseInt(entrada)) {
-                        jogadorEncontrado = player.clone();
-                        break;
-                    }
-                }
-                if (jogadorEncontrado != null) {
-                    jogadorEncontrado.imprimir();
-                }
+                encontrarEInserirJogador(players, playersInseridos, Integer.parseInt(entrada));
             }
-        } catch (IOException | CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
 
-        LocalDateTime dataHoraFinal = LocalDateTime.now();
-        Duration duracao = Duration.between(dataHoraInicio, dataHoraFinal);
-        long duracaoMillis = duracao.toMillis();
+            mergeSort(playersInseridos, 0, playersInseridos.size() - 1);
 
-        try (BufferedWriter buffer = new BufferedWriter(new FileWriter("791624_sequencial.txt"))) {
-            buffer.write("Matricula: 791624\t");
-            buffer.write("Tempo de execucao: " + duracaoMillis + "ms\t");
-            buffer.write("Numero de comparacoes: " + contadorComparacoes + "\t");
-        } catch (IOException e) {
+            for (Jogador jogadorInserido : playersInseridos) {
+                jogadorInserido.imprimir();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 }
-
