@@ -1,252 +1,172 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <time.h>
 
-#define MAX_LENGTH 100
-
-typedef struct
-{
+typedef struct {
     int id;
-    char nome[MAX_LENGTH];
+    char *nome;
     int altura;
     int peso;
-    char universidade[MAX_LENGTH];
+    char *universidade;
     int anoNascimento;
-    char cidadeNascimento[MAX_LENGTH];
-    char estadoNascimento[MAX_LENGTH];
+    char *cidadeNascimento;
+    char *estadoNascimento;
 } Jogador;
 
-void imprimir(Jogador *jogador)
-{
-    printf("[%i ## %s ## %i ## %i ## %i ## %s ## %s ## %s]\n", jogador->id, jogador->nome, jogador->altura, jogador->peso, jogador->anoNascimento, jogador->universidade, jogador->cidadeNascimento, jogador->estadoNascimento);
-}
-
-void replaceVirgula(char *str)
-{
-    int tamanho = strlen(str);
-    char tmp[3 * tamanho];
-    int j = 0;
-
-    for (int i = 0; i < tamanho; i++)
-    {
-        if (str[i] == ',' && str[i + 1] == ',')
-        {
-            tmp[j++] = ',';
-            tmp[j++] = 'n';
-            tmp[j++] = 'a';
-            tmp[j++] = 'o';
-            tmp[j++] = ' ';
-            tmp[j++] = 'i';
-            tmp[j++] = 'n';
-            tmp[j++] = 'f';
-            tmp[j++] = 'o';
-            tmp[j++] = 'r';
-            tmp[j++] = 'm';
-            tmp[j++] = 'a';
-            tmp[j++] = 'd';
-            tmp[j++] = 'o';
-            tmp[j++] = ',';
-
-            i++;
-        }
-        else
-        {
-            tmp[j++] = str[i];
-        }
+int getint(int *pos, char linha[]) {
+    char *tmp = calloc(100, sizeof(char));
+    for (int j = 0; linha[*pos] != ','; j++) {
+        tmp[j] = linha[(*pos)++];
     }
+    int resp = atoi(tmp);
+    free(tmp);
+    return resp;
+}
 
-    if (tmp[j - 2] == ',')
-    {
-        tmp[j - 1] = 'n';
-        tmp[j++] = 'a';
-        tmp[j++] = 'o';
-        tmp[j++] = ' ';
-        tmp[j++] = 'i';
-        tmp[j++] = 'n';
-        tmp[j++] = 'f';
-        tmp[j++] = 'o';
-        tmp[j++] = 'r';
-        tmp[j++] = 'm';
-        tmp[j++] = 'a';
-        tmp[j++] = 'd';
-        tmp[j++] = 'o';
+void getstring(int *pos, char *linha, char **v) {
+    char *tmp = calloc(100, sizeof(char));
+    for (int j = 0; (linha[*pos] != ',') && (linha[*pos] != '\n'); j++) {
+        tmp[j] = linha[(*pos)++];
     }
-
-    tmp[j] = '\0';
-    strcpy(str, tmp);
+    if (strlen(tmp) == 0) {
+        tmp = "nao informado";
+    }
+    *v = tmp;
 }
 
-void clone(Jogador *jogador, Jogador *novo)
-{
-    novo->id = jogador->id;
-    strcpy(novo->nome, jogador->nome);
-    novo->altura = jogador->altura;
-    novo->peso = jogador->peso;
-    strcpy(novo->universidade, jogador->universidade);
-    novo->anoNascimento = jogador->anoNascimento;
-    strcpy(novo->cidadeNascimento, jogador->cidadeNascimento);
-    strcpy(novo->estadoNascimento, jogador->estadoNascimento);
-}
-
-void ler(Jogador *jogador, char str[300])
-{
-    replaceVirgula(str);
-    str[strcspn(str, "\n")] = '\0';
-
-    char *token;
-    token = strtok(str, ",");
+char *getLinha(FILE *f) {
+    char *string = calloc(1001, sizeof(char));
     int i = 0;
+    while ((string[i++] = fgetc(f)) != '\n');
+    return string;
+}
 
-    while (token != NULL)
-    {
-        if (i % 8 == 0)
-        {
-            jogador->id = atoi(token);
-        }
-        else if (i % 8 == 1)
-        {
-            strcpy(jogador->nome, token);
-        }
-        else if (i % 8 == 2)
-        {
-            jogador->altura = atoi(token);
-        }
-        else if (i % 8 == 3)
-        {
-            jogador->peso = atoi(token);
-        }
-        else if (i % 8 == 4)
-        {
-            strcpy(jogador->universidade, token);
-        }
-        else if (i % 8 == 5)
-        {
-            jogador->anoNascimento = atoi(token);
-        }
-        else if (i % 8 == 6)
-        {
-            strcpy(jogador->cidadeNascimento, token);
-        }
-        else if (i % 8 == 7)
-        {
-            strcpy(jogador->estadoNascimento, token);
-        }
-        i++;
+void criar(Jogador vet[]) {
+    char lixo[1000], nf[20] = {"nao informado"};
+    char *linha;
+    FILE *f;
+    const char *filename = "/tmp/players.csv";
+    f = fopen(filename, "r");
 
-        token = strtok(NULL, ",");
+    if (f == NULL) {
+        printf("ERRO AO ABRIR ARQUIVO\n");
+        return;
     }
+
+    fscanf(f, " %[^\n]", lixo);
+    fgetc(f);
+
+    for (int i = 0; i < 3922; i++) {
+        int pos = 0;
+        linha = getLinha(f);
+        vet[i].id = getint(&pos, linha); pos++;
+        getstring(&pos, linha, &vet[i].nome); pos++;
+        vet[i].altura = getint(&pos, linha); pos++;
+        vet[i].peso = getint(&pos, linha); pos++;
+        getstring(&pos, linha, &vet[i].universidade); pos++;
+        vet[i].anoNascimento = getint(&pos, linha); pos++;
+        getstring(&pos, linha, &vet[i].cidadeNascimento); pos++;
+        getstring(&pos, linha, &vet[i].estadoNascimento); pos++;
+
+        // Verificação e atribuição de valores padrão
+        if (vet[i].id == -1) vet[i].id = -1;
+        if (vet[i].nome[0] == '\0') strcpy(vet[i].nome, nf);
+        if (vet[i].altura == 0) vet[i].altura = -1;
+        if (vet[i].peso == 0) vet[i].peso = -1;
+        if (vet[i].universidade[0] == '\0') strcpy(vet[i].universidade, nf);
+        if (vet[i].anoNascimento == 0) vet[i].anoNascimento = -1;
+        if (vet[i].cidadeNascimento[0] == '\0') strcpy(vet[i].cidadeNascimento, nf);
+        if (vet[i].estadoNascimento[0] == '\0') strcpy(vet[i].estadoNascimento, nf);
+    }
+
+    fclose(f);
 }
 
-void swap(Jogador array[], int i, int j)
-{
-    Jogador temp = array[i];
-    array[i] = array[j];
-    array[j] = temp;
+void swap(Jogador p1[], int i, int j) {
+    Jogador tmp = p1[i];
+    p1[i] = p1[j];
+    p1[j] = tmp;
 }
 
-void garanteOrdem(Jogador *jogador, int n)
-{
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = i + 1; j < n; j++)
-        {
-            if (jogador[i].anoNascimento == jogador[j].anoNascimento)
-            {
-                if (strcmp(jogador[i].nome, jogador[j].nome) > 0)
-                {
-                    swap(jogador, i, j);
-                }
-            }
+Jogador getMax(Jogador *array, int n) {
+    Jogador maior = array[0];
+    for (int i = 1; i < n; i++) {
+        if (maior.id < array[i].id) {
+            maior = array[i];
         }
     }
+    return maior;
 }
 
-void countingSort(Jogador array[], int n, int exp) {
+void radcountingSort(Jogador *array, int n, int exp, int *m, int *c) {
+    int count[10];
     Jogador output[n];
-    int count[10] = {0};
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < 10; i++) count[i] = 0;
+
+    for (int i = 0; i < n; i++) {
         count[(array[i].id / exp) % 10]++;
+    }
 
-    for (int i = 1; i < 10; i++)
+    for (int i = 1; i < 10; i++) {
         count[i] += count[i - 1];
+    }
 
     for (int i = n - 1; i >= 0; i--) {
         output[count[(array[i].id / exp) % 10] - 1] = array[i];
+        (*m)++;
         count[(array[i].id / exp) % 10]--;
     }
 
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         array[i] = output[i];
+    }
 }
 
-void radixsort(Jogador array[], int n) {
-    int maxID = array[0].id;
-    for (int i = 1; i < n; i++) {
-        if (array[i].id > maxID)
-            maxID = array[i].id;
+void radixsort(Jogador *array, int n, int *m, int *c) {
+    Jogador max = getMax(array, n);
+    for (int exp = 1; max.id / exp > 0; exp *= 10) {
+        radcountingSort(array, n, exp, m, c);
     }
-
-    for (int exp = 1; maxID / exp > 0; exp *= 10)
-        countingSort(array, n, exp);
 }
 
-int main()
-{
+int main() {
+    clock_t inicio, fi, tempo;
+    Jogador vet[3923];
+    criar(vet);
 
-    Jogador players[3923];
-    Jogador clonedPlayers[3923];
-    int contador = 0;
-    char n[5];
+    char p[100];
+    char fim[] = "FIM";
+    scanf(" %s", p);
 
-    FILE *arq = fopen("/tmp/players.csv", "r");
+    Jogador vet2[5000];
+    int k = 0;
 
-    if (arq == NULL)
-    {
-        printf("File not found\n");
-        return 0;
+    while (strcmp(p, fim) != 0) {
+        int n = atoi(p);
+        vet2[k] = vet[n];
+        scanf(" %s", p);
+        k++;
     }
 
-    char str[300];
-    fgets(str, sizeof(str), arq);
-    int i = 0;
-    while (fgets(str, sizeof(str), arq))
-    {
-        ler(&players[i], str);
-        i++;
-    }
-
-    scanf("%s", n);
-    int j = 0;
-    while (strcmp(n, "FIM") != 0)
-    {
-        int indice = atoi(n);
-        clone(&players[indice], &clonedPlayers[contador++]);
-        j++;
-        scanf("%s", n);
-    }
-
-    char name[100];
-    scanf(" %[^\n]s", name);
-
-    int cmp;
-    clock_t inicio, fim;
-    double total;
-
+    int mov = 0, comp = 0;
     inicio = clock();
-    radixsort(clonedPlayers, j);
-    garanteOrdem(clonedPlayers, j);
-    fim = clock();
 
-    total = ((double)(fim - inicio)) / CLOCKS_PER_SEC;
+    radixsort(vet2, k, &mov, &comp);
 
-    for (int i = 0; i < j; i++)
-    {
-        imprimir(&clonedPlayers[i]);
+    for (int i = 0; i < k; i++) {
+        printf("[%d ## %s ## %d ## %d ## %d ## %s ## %s ## %s]\n",
+            vet2[i].id, vet2[i].nome, vet2[i].altura, vet2[i].peso, vet2[i].anoNascimento, vet2[i].universidade, vet2[i].cidadeNascimento, vet2[i].estadoNascimento);
     }
 
-    fclose(arq);
+    FILE *f;
+    f = fopen("791624_radixsort.txt", "w");
+    int matricula = 801837;
+    fi = clock();
+    tempo = fi - inicio;
+    fprintf(f, "%d\t%d\t%d\t%ld", matricula, comp, mov, tempo);
+    fclose(f);
+
     return 0;
 }
