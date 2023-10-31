@@ -1,4 +1,4 @@
-//package TP02.TP02Q11;
+package TP02.TP02Q11;
 
 import java.io.*;
 import java.time.Duration;
@@ -15,9 +15,6 @@ class Jogador {
     private String universidade;
     private String cidadeNascimento;
     private String estadoNascimento;
-    private static Duration duracao;
-    private static int contadorComparacoes;
-    public static final String FILE_PATH = "/tmp/players.csv";
 
     // Construtor vazio
     public Jogador() {
@@ -199,23 +196,12 @@ class Jogador {
                 estadoNascimento +"]");
     }
 
-    public static void imprimirInformacoes(String nomeDoArquivo, int duracaoExecucao, int numeroComparacoes) {
-        try (BufferedWriter buffer = new BufferedWriter(new FileWriter(nomeDoArquivo))) {
-            buffer.write("Matricula: 791624\t");
-            buffer.write("Tempo de execucao: " + duracaoExecucao + "ms\t");
-            buffer.write("Numero de comparacoes: " + numeroComparacoes + "\t");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
     public static void main(String[] args) {
         try {
             Jogador jogador = new Jogador();
             ArrayList<Jogador> players = new ArrayList<>();
             ArrayList<Jogador> playersInseridos = new ArrayList<>();
-            jogador.ler(FILE_PATH, players);
+            jogador.ler("/tmp/players.csv", players);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String entrada;
@@ -229,7 +215,6 @@ class Jogador {
             }
 
             ordenarCountingSort(playersInseridos);
-            imprimirInformacoes(FILE_PATH,);
 
             for (Jogador jogadorInserido : playersInseridos) {
                 jogadorInserido.imprimir();
