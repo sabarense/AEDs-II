@@ -305,7 +305,7 @@ public class Jogador {
             Jogador jogador = new Jogador();
             Lista lista = new Lista();
 
-            Lista<jogadores> = jogador.ler("/tmp/players.csv");
+            Lista<Jogador> = jogador.ler("/tmp/players.csv");
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
