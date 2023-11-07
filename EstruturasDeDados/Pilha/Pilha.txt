@@ -1,0 +1,5 @@
+Estrutura linear para armazenamento de itens inseridos(push) e removidos(pop) conforme o princípio LIFO(last-in-first-out).
+
+Os objetos podem ser inseridos a qualquer momento, mas apenas o objeto que foi inserido por último pode ser removido.
+
+Os elementos podem ser inseridos e excluídos apenas em um lado da lista, chamado de topo.

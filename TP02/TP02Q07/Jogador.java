@@ -1,4 +1,4 @@
-//package TP02.TP02Q07;
+package TP02.TP02Q07;
 
 import java.io.*;
 import java.time.Duration;

@@ -1,0 +1,7 @@
+Estrutura linear na qual a inserção e remoção de itens segue o princípio FIFO(first-in-first-out)
+
+Os objetos podem ser inseridos a qualquer momento, mas apenas o objeto que está há mais tempo na fila pode ser removido
+
+Elementos são somente inseridos em um lado da lista, o final, e somente podem ser excluídos do outro lado, o início da lista
+
+Cada nó contém um ponteiro para os dados e um ponteiro de ligação(link) para o próximo elemento na fila

@@ -1,4 +1,4 @@
-//package TP02.TP02Q18;
+package TP02.TP02Q18;
 
 import java.io.*;
 import java.util.ArrayList;

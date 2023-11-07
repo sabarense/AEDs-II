@@ -1,4 +1,4 @@
-//package TP03.TP03Q01;
+package TP03.TP03Q01;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -301,31 +301,31 @@ public class Jogador {
     }
 
     public static void main(String[] args) {
-        try {
-            Jogador jogador = new Jogador();
-            Lista lista = new Lista();
-
-            Lista<Jogador> = jogador.ler("/tmp/players.csv");
-
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
-            // Parte 2 da entrada: processar comandos
-            int n = Integer.parseInt(reader.readLine());
-            String[] comandos = new String[n];
-            for (int i = 0; i < n; i++) {
-                comandos[i] = reader.readLine();
-            }
-
-            // Processar comandos
-            lista.processarComandos(comandos);
-
-            // Mostrar lista após operações
-            lista.mostrarLista();
-
-            reader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Jogador jogador = new Jogador();
+////            Lista lista = new Lista();
+//
+//            List<Jogador> listaJog = jogador.ler("/tmp/players.csv");
+//
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+//
+//            // Parte 2 da entrada: processar comandos
+//            int n = Integer.parseInt(reader.readLine());
+//            String[] comandos = new String[n];
+//            for (int i = 0; i < n; i++) {
+//                comandos[i] = reader.readLine();
+//            }
+//
+//            // Processar comandos
+//            lista.processarComandos(comandos);
+//
+//            // Mostrar lista após operações
+//            lista.mostrarLista();
+//
+//            reader.close();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }
 

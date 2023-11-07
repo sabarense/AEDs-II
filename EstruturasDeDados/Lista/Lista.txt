@@ -1,0 +1,11 @@
+Dados armazenados de forma sequencial, em estruturas chamadas de nós.
+
+Principal tipo de lista é chamado de lista encadeada(linked list).
+
+Dados armazenados em nós, estruturas individuais compostas por um campo de informação e um campo de endereço(ponteiro de ligação - link), que conecta ao próximo nó na lista.
+
+Lista pode ser simples ou dupla. Uma lista duplamente encadeada contém também ponteiros para elementos anteriores.
+
+Lista encadeada pode ser do tipo Circular.
+
+Amplamente empregadas na implementação de pilhas e filas.
