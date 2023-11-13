@@ -1,6 +1,6 @@
 package EstruturasDeDados.Pilha;
 
-public class Teste {
+public class Main {
     public static void main(String[] args) {
 
         Pilha pilha = new Pilha();
@@ -8,7 +8,7 @@ public class Teste {
         while(!pilha.isFull()){
             for(int i = 5; i >= 1; i--){
                 pilha.push(i);
-                System.out.println("Empilhei o elemento" + i);
+                System.out.println("Empilhei o elemento " + i);
             }
         }
 
@@ -19,7 +19,7 @@ public class Teste {
         System.out.println();
 
         while(!pilha.isEmpty()){
-            System.out.println("Desempilhei o elemento" + pilha.pop());
+            System.out.println("Desempilhei o elemento " + pilha.pop());
         }
 
     }
