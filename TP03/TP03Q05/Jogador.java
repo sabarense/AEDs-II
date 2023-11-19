@@ -158,126 +158,151 @@ public class Jogador {
         return clone;
     }
 
-    // Classe para a lista sequencial
-    static class ListaSequencial {
-        private Jogador[] array;
-        private int n;
+    static class Node {
+        Jogador jogador;
+        Node proximo;
 
-        // Construtor sem parâmetros
-        public ListaSequencial() {
-            this(0);
+        public Node(Jogador jogador) {
+            this.jogador = jogador;
+            this.proximo = null;
+        }
+    }
+
+    static class ListaDinamica {
+        private Node primeiro;
+
+        public ListaDinamica() {
+            this.primeiro = null;
         }
 
-        // Construtor com o parâmetro int tamanho
-        public ListaSequencial(int tamanho) {
-            array = new Jogador[tamanho];
-            n = 0;
+        void inserirInicio(Jogador jogador) {
+            Node novoNode = new Node(jogador);
+            novoNode.proximo = primeiro;
+            primeiro = novoNode;
         }
 
-        // Método de inserção no início
-        void inserirInicio(Jogador jogador) throws Exception {
-            if (n >= array.length) {
-                throw new Exception("Erro ao inserir");
+        void inserirFim(Jogador jogador) {
+            Node novoNode = new Node(jogador);
+            if (primeiro == null) {
+                primeiro = novoNode;
+            } else {
+                Node atual = primeiro;
+                while (atual.proximo != null) {
+                    atual = atual.proximo;
+                }
+                atual.proximo = novoNode;
             }
-            for (int i = n; i > 0; i--) {
-                array[i] = array[i - 1];
-            }
-            array[0] = jogador;
-            n++;
         }
 
-        // Método de inserir em qualquer posição válida
-        void inserir(Jogador jogador, int pos) throws Exception {
-            if (pos < 0 || pos > array.length) {
-                throw new Exception("Posição Inválida");
+        void inserir(Jogador jogador, int pos) {
+            if (pos == 0) {
+                inserirInicio(jogador);
+            } else {
+                Node novoNode = new Node(jogador);
+                Node anterior = obterNodeNaPosicao(pos - 1);
+                if (anterior != null) {
+                    novoNode.proximo = anterior.proximo;
+                    anterior.proximo = novoNode;
+                }
             }
-            for (int i = n; i > pos; i--) {
-                array[i] = array[i - 1];
-            }
-            array[pos] = jogador;
-            n++;
         }
 
-        // Método de inserção no final
-        void inserirFim(Jogador jogador) throws Exception {
-            if (n >= array.length) {
-                throw new Exception("Array cheio");
+        Jogador removerInicio() {
+            if (primeiro == null) {
+                return null;
             }
-            array[n] = jogador;
-            n++;
+            Jogador removido = primeiro.jogador;
+            primeiro = primeiro.proximo;
+            return removido;
         }
 
-        // Método de remoção no início
-        Jogador removerInicio() throws Exception {
-            if (n == 0) {
-                throw new Exception("Array vazio");
+        Jogador removerFim() {
+            if (primeiro == null) {
+                return null;
             }
-            Jogador resp = array[0];
-            for (int i = 0; i < n - 1; i++) {
-                array[i] = array[i + 1];
+            Jogador removido;
+            if (primeiro.proximo == null) {
+                removido = primeiro.jogador;
+                primeiro = null;
+            } else {
+                Node atual = primeiro;
+                while (atual.proximo.proximo != null) {
+                    atual = atual.proximo;
+                }
+                removido = atual.proximo.jogador;
+                atual.proximo = null;
             }
-            n--;
-            return resp;
+            return removido;
         }
 
-        // Método de remoção em uma posição válida
-        Jogador remover(int pos) throws Exception {
-            if (pos < 0 || pos >= n || n == 0) {
-                throw new Exception("Não foi possível remover");
+        Jogador remover(int pos) {
+            if (pos == 0) {
+                return removerInicio();
+            } else {
+                Node anterior = obterNodeNaPosicao(pos - 1);
+                if (anterior != null && anterior.proximo != null) {
+                    Jogador removido = anterior.proximo.jogador;
+                    anterior.proximo = anterior.proximo.proximo;
+                    return removido;
+                }
             }
-            Jogador resp = array[pos];
-            for (int i = pos; i < n - 1; i++) {
-                array[i] = array[i + 1];
-            }
-            n--;
-            return resp;
+            return null;
         }
 
-        // Método para remoção no final
-        Jogador removerFim() throws Exception {
-            if (n == 0) {
-                throw new Exception("Array vazio");
+        int tamanho() {
+            int tamanho = 0;
+            Node atual = primeiro;
+            while (atual != null) {
+                tamanho++;
+                atual = atual.proximo;
             }
-            return array[--n];
+            return tamanho;
         }
 
-        // Método para preencher o array de jogadores utilizados no main
-        public void preencher(Jogador[] tmp) {
-            for (int i = 0; i < n; i++) {
-                n++;
-                array[i] = Jogador.cloneJogador(tmp[i]);
-            }
-            System.out.println(n);
-        }
-
-        // Método para imprimir os jogadores do array
         void mostrar() {
-            for (int i = 0; i < n; i++) {
+            Node atual = primeiro;
+            int i = 0;
+            while (atual != null) {
                 System.out.print("[" + i + "]");
                 System.out.print(" ## ");
-                System.out.print(array[i].getNome());
+                System.out.print(atual.jogador.getNome());
                 System.out.print(" ## ");
-                System.out.print(array[i].getAltura());
+                System.out.print(atual.jogador.getAltura());
                 System.out.print(" ## ");
-                System.out.print(array[i].getPeso());
+                System.out.print(atual.jogador.getPeso());
                 System.out.print(" ## ");
-                System.out.print(array[i].getAnoNascimento());
+                System.out.print(atual.jogador.getAnoNascimento());
                 System.out.print(" ## ");
-                System.out.print(array[i].getUniversidade());
+                System.out.print(atual.jogador.getUniversidade());
                 System.out.print(" ## ");
-                System.out.print(array[i].getCidadeNascimento());
+                System.out.print(atual.jogador.getCidadeNascimento());
                 System.out.print(" ## ");
-                System.out.print(array[i].getEstadoNascimento());
+                System.out.print(atual.jogador.getEstadoNascimento());
                 System.out.println(" ## ");
+                atual = atual.proximo;
+                i++;
             }
+        }
+
+        Node obterNodeNaPosicao(int pos) {
+            if (pos < 0 || pos >= tamanho()) {
+                return null;
+            }
+            Node atual = primeiro;
+            for (int i = 0; i < pos; i++) {
+                atual = atual.proximo;
+            }
+            return atual;
         }
     }
 
     public static void main(String[] args) throws Exception {
+
         String temp;
         Jogador[] a = ler();
+        Jogador[] b = new Jogador[3922];
         int i = 0;
-        ListaSequencial lista = new ListaSequencial(3923);
+        ListaDinamica lista = new ListaDinamica();
 
         // Método para ler e inserir ao final os jogadores do arquivo de entrada
         while (true) {

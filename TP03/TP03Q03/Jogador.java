@@ -1,4 +1,3 @@
-import TP03.TP03Q06.Arq;
 
 public class Jogador {
 
@@ -273,20 +272,95 @@ public class Jogador {
         }
     }
 
+    // Classe para a pilha de jogador
+    static class PilhaJogador {
+        public Celula topo;
+        public Celula fim;
+
+        public PilhaJogador(){
+            topo = null;
+        }
+
+        public void inserir(Jogador jogador){
+            Celula tmp = new Celula(jogador);
+            if(topo == null){
+                topo = tmp;
+                fim = tmp;
+                return;
+            }
+            Celula ponteiro = topo;
+
+            while(ponteiro.prox != null){
+                ponteiro = ponteiro.prox;
+            }
+            ponteiro.prox = tmp;
+            fim = tmp;
+        }
+
+        public Jogador remover() throws Exception {
+            if (topo == null) {
+                throw new Exception("Pilha vazia!");
+            }
+
+            Jogador removido = fim.elemento;
+
+            if (topo == fim) {
+                topo = null;
+                fim = null;
+            } else {
+                Celula ponteiro = topo;
+                while (ponteiro.prox != fim) {
+                    ponteiro = ponteiro.prox;
+                }
+                ponteiro.prox = null;
+                fim = ponteiro;
+            }
+
+            return removido;
+        }
+
+
+        public void mostrar(){
+            int index = 0;
+            for (Celula i = topo; i != null; i = i.prox) {
+                System.out.println("[" + index + "] ## " + i.elemento.getNome() + " ## " + i.elemento.getAltura() + " ## " + i.elemento.getPeso() + " ## " +
+                        i.elemento.getAnoNascimento() + " ## " + i.elemento.getUniversidade() + " ## " + i.elemento.getCidadeNascimento() + " ## " +
+                        i.elemento.getEstadoNascimento() + " ##");
+                index++;
+            }
+        }
+
+    }
+
+    // Classe para a celula
+    static class Celula {
+        public Jogador elemento;
+        public Celula prox;
+
+        public Celula(){
+            this(null);
+        }
+
+        public Celula(Jogador elemento){
+            this.elemento = elemento;
+            this.prox = null;
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         String temp;
-        Jogador[] a = ler();
+        Jogador[] a = Jogador.ler();
+        Jogador[] b = new Jogador[3922];
         int i = 0;
-        ListaSequencial lista = new ListaSequencial(3923);
+        PilhaJogador pilha = new PilhaJogador();
 
-        // Método para ler e inserir ao final os jogadores do arquivo de entrada
+        // Método para ler e empilhar os jogadores do arquivo de entrada
         while (true) {
             temp = MyIO.readLine();
-            if (temp.equals("FIM")){
+            if (temp.equals("FIM")) {
                 break;
-            }
-            else if (Integer.parseInt(temp) < 3922) {
-                lista.inserirFim(PesquisaId(Integer.parseInt(temp)));
+            } else if (Integer.parseInt(temp) < 3922) {
+                pilha.inserir(Jogador.PesquisaId(Integer.parseInt(temp)));
                 i++;
             }
         }
@@ -296,36 +370,19 @@ public class Jogador {
             String acao = MyIO.readString();
 
             switch (acao) {
-                case "II":
-                    int idII = MyIO.readInt();
-                    lista.inserirInicio(PesquisaId(idII));
-                    break;
-                case "IF":
-                    int idIF = MyIO.readInt();
-                    lista.inserirFim(PesquisaId(idIF));
-                    break;
-                case "I*":
-                    int pos = MyIO.readInt();
+                case "I":
                     int idI = MyIO.readInt();
-                    lista.inserir(PesquisaId(idI), pos);
+                    pilha.inserir(Jogador.PesquisaId(idI));
                     break;
-                case "RF":
-                    Jogador removidoFim = lista.removerFim();
-                    System.out.println("(R) " + removidoFim.getNome());
-                    break;
-                case "RI":
-                    Jogador removidoInicio = lista.removerInicio();
-                    System.out.println("(R) " + removidoInicio.getNome());
+                case "R":
+                    Jogador removido = pilha.remover();
+                    System.out.println("(R) " + removido.getNome());
                     break;
                 default:
-                    int posDefault = MyIO.readInt();
-                    Jogador removidoDefault = lista.remover(posDefault);
-                    System.out.println("(R) " + removidoDefault.getNome());
                     break;
             }
         }
-
-        lista.mostrar();
+        pilha.mostrar();
     }
 }
 

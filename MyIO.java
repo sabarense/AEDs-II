@@ -1,7 +1,5 @@
-package TP02;
-
 import java.io.*;
-import java.nio.charset.*;
+import java.nio.charset.Charset;
 
 public class MyIO {
 
