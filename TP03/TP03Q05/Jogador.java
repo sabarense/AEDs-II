@@ -95,8 +95,8 @@ public class Jogador {
     }
 
     // Método para encontrar o jogador com o id inserido
-    static Jogador PesquisaId(int x) {
-        Jogador[] temp = ler();
+    static TP04.TP04Q01.Jogador PesquisaId(int x) {
+        TP04.TP04Q01.Jogador[] temp = ler();
         for (int i = 0; i < 3922; i++) {
             if (temp[i].getId() == x) {
                 return temp[i];
@@ -106,13 +106,13 @@ public class Jogador {
     }
 
     // Método para ler o jogador a partir do ID do parâmetro
-    static Jogador[] ler() {
+    static TP04.TP04Q01.Jogador[] ler() {
         Arq.openRead("/tmp/players.csv");
-        Jogador[] jogador = new Jogador[3922];
+        TP04.TP04Q01.Jogador[] jogador = new TP04.TP04Q01.Jogador[3922];
         int i = 0;
         Arq.readLine();
         while (Arq.hasNext()) {
-            jogador[i] = new Jogador();
+            jogador[i] = new TP04.TP04Q01.Jogador();
             String jog = Arq.readLine();
             String[] temp = new String[8];
             temp = jog.split(",", 8);
@@ -136,9 +136,9 @@ public class Jogador {
     }
 
     // Método para clonar um jogador
-    static Jogador cloneJogador(Jogador jogador) {
+    static TP04.TP04Q01.Jogador cloneJogador(TP04.TP04Q01.Jogador jogador) {
         String temp;
-        Jogador clone = new Jogador();
+        TP04.TP04Q01.Jogador clone = new TP04.TP04Q01.Jogador();
         temp = Integer.toString(jogador.getId());
         clone.setId(Integer.parseInt(temp));
         temp = jogador.getNome();
@@ -159,10 +159,10 @@ public class Jogador {
     }
 
     static class Node {
-        Jogador jogador;
+        TP04.TP04Q01.Jogador jogador;
         Node proximo;
 
-        public Node(Jogador jogador) {
+        public Node(TP04.TP04Q01.Jogador jogador) {
             this.jogador = jogador;
             this.proximo = null;
         }
@@ -175,13 +175,13 @@ public class Jogador {
             this.primeiro = null;
         }
 
-        void inserirInicio(Jogador jogador) {
+        void inserirInicio(TP04.TP04Q01.Jogador jogador) {
             Node novoNode = new Node(jogador);
             novoNode.proximo = primeiro;
             primeiro = novoNode;
         }
 
-        void inserirFim(Jogador jogador) {
+        void inserirFim(TP04.TP04Q01.Jogador jogador) {
             Node novoNode = new Node(jogador);
             if (primeiro == null) {
                 primeiro = novoNode;
@@ -194,7 +194,7 @@ public class Jogador {
             }
         }
 
-        void inserir(Jogador jogador, int pos) {
+        void inserir(TP04.TP04Q01.Jogador jogador, int pos) {
             if (pos == 0) {
                 inserirInicio(jogador);
             } else {
@@ -207,20 +207,20 @@ public class Jogador {
             }
         }
 
-        Jogador removerInicio() {
+        TP04.TP04Q01.Jogador removerInicio() {
             if (primeiro == null) {
                 return null;
             }
-            Jogador removido = primeiro.jogador;
+            TP04.TP04Q01.Jogador removido = primeiro.jogador;
             primeiro = primeiro.proximo;
             return removido;
         }
 
-        Jogador removerFim() {
+        TP04.TP04Q01.Jogador removerFim() {
             if (primeiro == null) {
                 return null;
             }
-            Jogador removido;
+            TP04.TP04Q01.Jogador removido;
             if (primeiro.proximo == null) {
                 removido = primeiro.jogador;
                 primeiro = null;
@@ -235,13 +235,13 @@ public class Jogador {
             return removido;
         }
 
-        Jogador remover(int pos) {
+        TP04.TP04Q01.Jogador remover(int pos) {
             if (pos == 0) {
                 return removerInicio();
             } else {
                 Node anterior = obterNodeNaPosicao(pos - 1);
                 if (anterior != null && anterior.proximo != null) {
-                    Jogador removido = anterior.proximo.jogador;
+                    TP04.TP04Q01.Jogador removido = anterior.proximo.jogador;
                     anterior.proximo = anterior.proximo.proximo;
                     return removido;
                 }
@@ -299,8 +299,8 @@ public class Jogador {
     public static void main(String[] args) throws Exception {
 
         String temp;
-        Jogador[] a = ler();
-        Jogador[] b = new Jogador[3922];
+        TP04.TP04Q01.Jogador[] a = ler();
+        TP04.TP04Q01.Jogador[] b = new TP04.TP04Q01.Jogador[3922];
         int i = 0;
         ListaDinamica lista = new ListaDinamica();
 
@@ -335,16 +335,16 @@ public class Jogador {
                     lista.inserir(PesquisaId(idI), pos);
                     break;
                 case "RF":
-                    Jogador removidoFim = lista.removerFim();
+                    TP04.TP04Q01.Jogador removidoFim = lista.removerFim();
                     System.out.println("(R) " + removidoFim.getNome());
                     break;
                 case "RI":
-                    Jogador removidoInicio = lista.removerInicio();
+                    TP04.TP04Q01.Jogador removidoInicio = lista.removerInicio();
                     System.out.println("(R) " + removidoInicio.getNome());
                     break;
                 default:
                     int posDefault = MyIO.readInt();
-                    Jogador removidoDefault = lista.remover(posDefault);
+                    TP04.TP04Q01.Jogador removidoDefault = lista.remover(posDefault);
                     System.out.println("(R) " + removidoDefault.getNome());
                     break;
             }

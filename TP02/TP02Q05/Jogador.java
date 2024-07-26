@@ -33,8 +33,8 @@ class Jogador {
         this.estadoNascimento = estadoNascimento;
     }
 
-    protected Jogador clone() throws CloneNotSupportedException {
-        Jogador novo = new Jogador();
+    protected TP04.TP04Q01.Jogador clone() throws CloneNotSupportedException {
+        TP04.TP04Q01.Jogador novo = new TP04.TP04Q01.Jogador();
         novo.setId(this.id);
         novo.setAltura(this.altura);
         novo.setPeso(this.peso);
@@ -110,14 +110,14 @@ class Jogador {
         this.estadoNascimento = estadoNascimento;
     }
 
-    public void ler(String nomeDoArquivo, ArrayList<Jogador> array) throws Exception {
+    public void ler(String nomeDoArquivo, ArrayList<TP04.TP04Q01.Jogador> array) throws Exception {
         try (BufferedReader buffer = new BufferedReader(new FileReader(nomeDoArquivo))) {
             buffer.readLine();
             String linha;
             while ((linha = buffer.readLine()) != null) {
                 String[] jogadorInfo = linha.split(",", -1);
 
-                Jogador jogador = new Jogador();
+                TP04.TP04Q01.Jogador jogador = new TP04.TP04Q01.Jogador();
                 jogador.setId(Integer.parseInt(jogadorInfo[0]));
                 jogador.setNome(obterValor(jogadorInfo, 1, "nao informado"));
                 jogador.setAltura(obterValorInteiro(jogadorInfo, 2, 0));
@@ -146,13 +146,13 @@ class Jogador {
         return valorPadrao;
     }
 
-    public static void swap(ArrayList<Jogador> jogadores, int i, int j) {
-        Jogador temp = jogadores.get(i);
+    public static void swap(ArrayList<TP04.TP04Q01.Jogador> jogadores, int i, int j) {
+        TP04.TP04Q01.Jogador temp = jogadores.get(i);
         jogadores.set(i, jogadores.get(j));
         jogadores.set(j, temp);
     }
 
-    public static void ordenarSelecao(ArrayList<Jogador> jogadores) throws IOException {
+    public static void ordenarSelecao(ArrayList<TP04.TP04Q01.Jogador> jogadores) throws IOException {
 
         LocalDateTime dataHoraInicio = LocalDateTime.now();
         FileWriter escritor = new FileWriter("791624_selecao.txt");
@@ -181,8 +181,8 @@ class Jogador {
         buffer.close();
     }
 
-    private static void encontrarEInserirJogador(ArrayList<Jogador> players, ArrayList<Jogador> playersInseridos, int id) throws CloneNotSupportedException {
-        for (Jogador player : players) {
+    private static void encontrarEInserirJogador(ArrayList<TP04.TP04Q01.Jogador> players, ArrayList<TP04.TP04Q01.Jogador> playersInseridos, int id) throws CloneNotSupportedException {
+        for (TP04.TP04Q01.Jogador player : players) {
             if (player.getId() == id) {
                 playersInseridos.add(player.clone());
                 break;
@@ -198,9 +198,9 @@ class Jogador {
 
     public static void main(String[] args) {
         try {
-            Jogador jogador = new Jogador();
-            ArrayList<Jogador> players = new ArrayList<>();
-            ArrayList<Jogador> playersInseridos = new ArrayList<>();
+            TP04.TP04Q01.Jogador jogador = new TP04.TP04Q01.Jogador();
+            ArrayList<TP04.TP04Q01.Jogador> players = new ArrayList<>();
+            ArrayList<TP04.TP04Q01.Jogador> playersInseridos = new ArrayList<>();
             jogador.ler("/tmp/players.csv", players);
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -216,7 +216,7 @@ class Jogador {
 
             ordenarSelecao(playersInseridos);
 
-            for (Jogador jogadorInserido : playersInseridos) {
+            for (TP04.TP04Q01.Jogador jogadorInserido : playersInseridos) {
                 jogadorInserido.imprimir();
             }
         } catch (Exception e) {

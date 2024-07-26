@@ -1,3 +1,5 @@
+package TP03.TP03Q09;
+
 import java.util.Scanner;
 
 public class Jogador {

@@ -1,3 +1,5 @@
+package TP03.TP03Q11;
+
 class Jogador {
     private int playerId;
     private String playerName;

@@ -98,8 +98,8 @@ public class Jogador {
         return estadoNascimento;
     }
 
-    static Jogador buscarPorId(int x) {
-        Jogador[] temp = ler();
+    static TP04.TP04Q01.Jogador buscarPorId(int x) {
+        TP04.TP04Q01.Jogador[] temp = ler();
         for (int i = 0; i < SIZE; i++) {
             if (temp[i].getId() == x) {
                 return temp[i];
@@ -108,21 +108,21 @@ public class Jogador {
         return temp[0];
     }
 
-    static Jogador[] ler() {
+    static TP04.TP04Q01.Jogador[] ler() {
         Scanner scanner;
         try {
             scanner = new Scanner(new BufferedReader(new FileReader(FILE_PATH)));
         } catch (IOException e) {
             e.printStackTrace();
-            return new Jogador[0];
+            return new TP04.TP04Q01.Jogador[0];
         }
 
         scanner.nextLine(); // Ignorar a primeira linha
-        Jogador[] jogador = new Jogador[SIZE];
+        TP04.TP04Q01.Jogador[] jogador = new TP04.TP04Q01.Jogador[SIZE];
         int i = 0;
 
         while (scanner.hasNext()) {
-            jogador[i] = new Jogador();
+            jogador[i] = new TP04.TP04Q01.Jogador();
             String jog = scanner.nextLine();
             String[] aux = new String[8];
             aux = jog.split(",", 8);
@@ -151,8 +151,8 @@ public class Jogador {
         return jogador;
     }
 
-    static Jogador cloneJogador(Jogador jogador) {
-        Jogador clone = new Jogador();
+    static TP04.TP04Q01.Jogador cloneJogador(TP04.TP04Q01.Jogador jogador) {
+        TP04.TP04Q01.Jogador clone = new TP04.TP04Q01.Jogador();
         clone.setId(jogador.getId());
         clone.setNome(jogador.getNome());
         clone.setAltura(jogador.getAltura());
@@ -165,7 +165,7 @@ public class Jogador {
     }
 
     public static class ListaSequencial {
-        private Jogador[] array;
+        private TP04.TP04Q01.Jogador[] array;
         private int n;
 
         public ListaSequencial() {
@@ -173,11 +173,11 @@ public class Jogador {
         }
 
         public ListaSequencial(int tamanho) {
-            array = new Jogador[tamanho];
+            array = new TP04.TP04Q01.Jogador[tamanho];
             n = 0;
         }
 
-        void inserirInicio(Jogador jogador) throws Exception {
+        void inserirInicio(TP04.TP04Q01.Jogador jogador) throws Exception {
             if (n >= array.length) {
                 throw new Exception("Erro ao inserir");
             }
@@ -188,7 +188,7 @@ public class Jogador {
             n++;
         }
 
-        void inserir(Jogador jogador, int pos) throws Exception {
+        void inserir(TP04.TP04Q01.Jogador jogador, int pos) throws Exception {
             if (pos < 0 || pos > array.length) {
                 throw new Exception("Posição Inválida");
             }
@@ -199,7 +199,7 @@ public class Jogador {
             n++;
         }
 
-        void inserirFim(Jogador jogador) throws Exception {
+        void inserirFim(TP04.TP04Q01.Jogador jogador) throws Exception {
             if (n >= array.length) {
                 throw new Exception("Array cheio");
             }
@@ -207,11 +207,11 @@ public class Jogador {
             n++;
         }
 
-        Jogador removerInicio() throws Exception {
+        TP04.TP04Q01.Jogador removerInicio() throws Exception {
             if (n == 0) {
                 throw new Exception("Array vazio");
             }
-            Jogador resp = array[0];
+            TP04.TP04Q01.Jogador resp = array[0];
             for (int i = 0; i < n - 1; i++) {
                 array[i] = array[i + 1];
             }
@@ -219,11 +219,11 @@ public class Jogador {
             return resp;
         }
 
-        Jogador remover(int pos) throws Exception {
+        TP04.TP04Q01.Jogador remover(int pos) throws Exception {
             if (pos < 0 || pos >= n || n == 0) {
                 throw new Exception("Não foi possível remover");
             }
-            Jogador resp = array[pos];
+            TP04.TP04Q01.Jogador resp = array[pos];
             for (int i = pos; i < n - 1; i++) {
                 array[i] = array[i + 1];
             }
@@ -231,17 +231,17 @@ public class Jogador {
             return resp;
         }
 
-        Jogador removerFim() throws Exception {
+        TP04.TP04Q01.Jogador removerFim() throws Exception {
             if (n == 0) {
                 throw new Exception("Array vazio");
             }
             return array[--n];
         }
 
-        public void preencher(Jogador[] aux) {
+        public void preencher(TP04.TP04Q01.Jogador[] aux) {
             for (int i = 0; i < n; i++) {
                 n++;
-                array[i] = Jogador.cloneJogador(aux[i]);
+                array[i] = TP04.TP04Q01.Jogador.cloneJogador(aux[i]);
             }
             System.out.println(n);
         }
@@ -276,7 +276,7 @@ public class Jogador {
             topo = null;
         }
 
-        public void inserir(Jogador jogador) {
+        public void inserir(TP04.TP04Q01.Jogador jogador) {
             Celula tmp = new Celula(jogador);
             if (topo == null) {
                 topo = tmp;
@@ -292,12 +292,12 @@ public class Jogador {
             fim = tmp;
         }
 
-        public Jogador remover() throws Exception {
+        public TP04.TP04Q01.Jogador remover() throws Exception {
             if (topo == null) {
                 throw new Exception("Pilha vazia!");
             }
 
-            Jogador removido = fim.elemento;
+            TP04.TP04Q01.Jogador removido = fim.elemento;
 
             if (topo == fim) {
                 topo = null;
@@ -340,14 +340,14 @@ public class Jogador {
     }
 
     static class Celula {
-        public Jogador elemento;
+        public TP04.TP04Q01.Jogador elemento;
         public Celula prox;
 
         public Celula() {
             this(null);
         }
 
-        public Celula(Jogador elemento) {
+        public Celula(TP04.TP04Q01.Jogador elemento) {
             this.elemento = elemento;
             this.prox = null;
         }
@@ -356,8 +356,8 @@ public class Jogador {
     public static void main(String[] args) throws Exception {
         Scanner scanner = new Scanner(System.in);
         String aux;
-        Jogador[] a = Jogador.ler();
-        Jogador[] b = new Jogador[SIZE];
+        TP04.TP04Q01.Jogador[] a = TP04.TP04Q01.Jogador.ler();
+        TP04.TP04Q01.Jogador[] b = new TP04.TP04Q01.Jogador[SIZE];
         int i = 0;
         PilhaJogador pilha = new PilhaJogador();
 
@@ -366,7 +366,7 @@ public class Jogador {
             if (aux.equals("FIM")) {
                 break;
             } else if (Integer.parseInt(aux) < SIZE) {
-                pilha.inserir(Jogador.buscarPorId(Integer.parseInt(aux)));
+                pilha.inserir(TP04.TP04Q01.Jogador.buscarPorId(Integer.parseInt(aux)));
                 i++;
             }
         }
@@ -378,10 +378,10 @@ public class Jogador {
             switch (acao) {
                 case "I":
                     int idI = scanner.nextInt();
-                    pilha.inserir(Jogador.buscarPorId(idI));
+                    pilha.inserir(TP04.TP04Q01.Jogador.buscarPorId(idI));
                     break;
                 case "R":
-                    Jogador removido = pilha.remover();
+                    TP04.TP04Q01.Jogador removido = pilha.remover();
                     System.out.println("(R) " + removido.getNome());
                     break;
                 default:

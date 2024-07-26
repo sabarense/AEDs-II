@@ -95,8 +95,8 @@ public class Jogador {
     }
 
     // Método para encontrar o jogador com o id inserido
-    static Jogador PesquisaId(int x) {
-        Jogador[] temp = ler();
+    static TP04.TP04Q01.Jogador PesquisaId(int x) {
+        TP04.TP04Q01.Jogador[] temp = ler();
         for (int i = 0; i < 3922; i++) {
             if (temp[i].getId() == x) {
                 return temp[i];
@@ -106,13 +106,13 @@ public class Jogador {
     }
 
     // Método para ler o jogador a partir do ID do parâmetro
-    static Jogador[] ler() {
+    static TP04.TP04Q01.Jogador[] ler() {
         Arq.openRead("/tmp/players.csv");
-        Jogador[] jogador = new Jogador[3922];
+        TP04.TP04Q01.Jogador[] jogador = new TP04.TP04Q01.Jogador[3922];
         int i = 0;
         Arq.readLine();
         while (Arq.hasNext()) {
-            jogador[i] = new Jogador();
+            jogador[i] = new TP04.TP04Q01.Jogador();
             String jog = Arq.readLine();
             String[] temp = new String[8];
             temp = jog.split(",", 8);
@@ -136,9 +136,9 @@ public class Jogador {
     }
 
     // Método para clonar um jogador
-    static Jogador cloneJogador(Jogador jogador) {
+    static TP04.TP04Q01.Jogador cloneJogador(TP04.TP04Q01.Jogador jogador) {
         String temp;
-        Jogador clone = new Jogador();
+        TP04.TP04Q01.Jogador clone = new TP04.TP04Q01.Jogador();
         temp = Integer.toString(jogador.getId());
         clone.setId(Integer.parseInt(temp));
         temp = jogador.getNome();
@@ -160,7 +160,7 @@ public class Jogador {
 
     // Classe para a lista sequencial
     static class ListaSequencial {
-        private Jogador[] array;
+        private TP04.TP04Q01.Jogador[] array;
         private int n;
 
         // Construtor sem parâmetros
@@ -170,12 +170,12 @@ public class Jogador {
 
         // Construtor com o parâmetro int tamanho
         public ListaSequencial(int tamanho) {
-            array = new Jogador[tamanho];
+            array = new TP04.TP04Q01.Jogador[tamanho];
             n = 0;
         }
 
         // Método de inserção no início
-        void inserirInicio(Jogador jogador) throws Exception {
+        void inserirInicio(TP04.TP04Q01.Jogador jogador) throws Exception {
             if (n >= array.length) {
                 throw new Exception("Erro ao inserir");
             }
@@ -187,7 +187,7 @@ public class Jogador {
         }
 
         // Método de inserir em qualquer posição válida
-        void inserir(Jogador jogador, int pos) throws Exception {
+        void inserir(TP04.TP04Q01.Jogador jogador, int pos) throws Exception {
             if (pos < 0 || pos > array.length) {
                 throw new Exception("Posição Inválida");
             }
@@ -199,7 +199,7 @@ public class Jogador {
         }
 
         // Método de inserção no final
-        void inserirFim(Jogador jogador) throws Exception {
+        void inserirFim(TP04.TP04Q01.Jogador jogador) throws Exception {
             if (n >= array.length) {
                 throw new Exception("Array cheio");
             }
@@ -208,11 +208,11 @@ public class Jogador {
         }
 
         // Método de remoção no início
-        Jogador removerInicio() throws Exception {
+        TP04.TP04Q01.Jogador removerInicio() throws Exception {
             if (n == 0) {
                 throw new Exception("Array vazio");
             }
-            Jogador resp = array[0];
+            TP04.TP04Q01.Jogador resp = array[0];
             for (int i = 0; i < n - 1; i++) {
                 array[i] = array[i + 1];
             }
@@ -221,11 +221,11 @@ public class Jogador {
         }
 
         // Método de remoção em uma posição válida
-        Jogador remover(int pos) throws Exception {
+        TP04.TP04Q01.Jogador remover(int pos) throws Exception {
             if (pos < 0 || pos >= n || n == 0) {
                 throw new Exception("Não foi possível remover");
             }
-            Jogador resp = array[pos];
+            TP04.TP04Q01.Jogador resp = array[pos];
             for (int i = pos; i < n - 1; i++) {
                 array[i] = array[i + 1];
             }
@@ -234,7 +234,7 @@ public class Jogador {
         }
 
         // Método para remoção no final
-        Jogador removerFim() throws Exception {
+        TP04.TP04Q01.Jogador removerFim() throws Exception {
             if (n == 0) {
                 throw new Exception("Array vazio");
             }
@@ -242,10 +242,10 @@ public class Jogador {
         }
 
         // Método para preencher o array de jogadores utilizados no main
-        public void preencher(Jogador[] tmp) {
+        public void preencher(TP04.TP04Q01.Jogador[] tmp) {
             for (int i = 0; i < n; i++) {
                 n++;
-                array[i] = Jogador.cloneJogador(tmp[i]);
+                array[i] = TP04.TP04Q01.Jogador.cloneJogador(tmp[i]);
             }
             System.out.println(n);
         }
@@ -275,7 +275,7 @@ public class Jogador {
 
     public static void main(String[] args) throws Exception {
         String temp;
-        Jogador[] a = ler();
+        TP04.TP04Q01.Jogador[] a = ler();
         int i = 0;
         ListaSequencial lista = new ListaSequencial(3923);
 
@@ -310,16 +310,16 @@ public class Jogador {
                     lista.inserir(PesquisaId(idI), pos);
                     break;
                 case "RF":
-                    Jogador removidoFim = lista.removerFim();
+                    TP04.TP04Q01.Jogador removidoFim = lista.removerFim();
                     System.out.println("(R) " + removidoFim.getNome());
                     break;
                 case "RI":
-                    Jogador removidoInicio = lista.removerInicio();
+                    TP04.TP04Q01.Jogador removidoInicio = lista.removerInicio();
                     System.out.println("(R) " + removidoInicio.getNome());
                     break;
                 default:
                     int posDefault = MyIO.readInt();
-                    Jogador removidoDefault = lista.remover(posDefault);
+                    TP04.TP04Q01.Jogador removidoDefault = lista.remover(posDefault);
                     System.out.println("(R) " + removidoDefault.getNome());
                     break;
             }
